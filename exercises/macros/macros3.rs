@@ -5,9 +5,9 @@
 // Execute `rustlings hint macros3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 mod macros {
+    #[macro_export] // 将宏导出，以便在根模块中使用
     macro_rules! my_macro {
         () => {
             println!("Check out my macro!");
@@ -16,5 +16,6 @@ mod macros {
 }
 
 fn main() {
-    my_macro!();
+    my_macro!(); // 直接调用宏
 }
+

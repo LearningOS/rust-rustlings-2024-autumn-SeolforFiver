@@ -6,7 +6,6 @@
 // Execute `rustlings hint iterators2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 // iterators2.rs
 
@@ -36,8 +35,7 @@ pub fn capitalize_words_vector(words: &[&str]) -> Vec<String> {
 pub fn capitalize_words_string(words: &[&str]) -> String {
     words.iter()
          .map(|&word| capitalize_first(word))
-         .collect::<Vec<String>>()
-         .join(" ")
+         .collect::<String>() // Collect directly into a single string
 }
 
 #[cfg(test)]
