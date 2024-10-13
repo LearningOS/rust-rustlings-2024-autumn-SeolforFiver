@@ -7,7 +7,6 @@
 // Execute `rustlings hint tests6` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 struct Foo {
     a: u128,
@@ -16,18 +15,23 @@ struct Foo {
 
 /// # Safety
 ///
-/// The `ptr` must contain an owned box of `Foo`.
+/// The `ptr` must contain an owned box of `Foo`. It must have been created
+/// by converting a `Box<Foo>` to a raw pointer using `Box::into_raw`.
 unsafe fn raw_pointer_to_box(ptr: *mut Foo) -> Box<Foo> {
     // SAFETY: The `ptr` contains an owned box of `Foo` by contract. We
-    // simply reconstruct the box from that pointer.
-    let mut ret: Box<Foo> = unsafe { ??? };
-    todo!("The rest of the code goes here")
+    // can safely reconstruct the box from that pointer using `Box::from_raw`.
+    let mut ret: Box<Foo> = unsafe { Box::from_raw(ptr) };
+    
+    // Modify the content of the `b` field in the `Foo` struct.
+    ret.b = Some("hello".to_owned());
+
+    // Return the reconstructed and modified box.
+    ret
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::time::Instant;
 
     #[test]
     fn test_success() {
