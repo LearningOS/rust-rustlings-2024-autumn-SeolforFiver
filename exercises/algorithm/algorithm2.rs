@@ -2,7 +2,7 @@
 	double linked list reverse
 	This problem requires you to reverse a doubly linked list
 */
-// I AM NOT DONE
+
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 
@@ -59,6 +59,9 @@ impl<T> LinkedList<T> {
     }
 
     pub fn get(&mut self, index: i32) -> Option<&T> {
+        if index < 0 || index as u32 >= self.length {
+            return None;
+        }
         self.get_ith_node(self.start, index)
     }
 
@@ -72,28 +75,27 @@ impl<T> LinkedList<T> {
         }
     }
 
-    // 实现链表反转的函数
+    // 反转链表
     pub fn reverse(&mut self) {
         let mut current = self.start;
-        let mut prev = None;
 
         while let Some(mut node_ptr) = current {
             unsafe {
+                // 获取当前节点的可变引用
                 let node = node_ptr.as_mut();
 
-                // 交换 prev 和 next
-                node.next = prev;
-                node.prev = current;
+                // 交换当前节点的 next 和 prev 指针
+                let temp = node.next;
+                node.next = node.prev;
+                node.prev = temp;
 
-                // 保存下一个节点
+                // 移动到下一个节点（交换前的 prev 节点）
                 current = node.prev;
-                prev = Some(node_ptr);
             }
         }
 
-        // 更新 start 和 end
-        self.end = self.start; // 原来的 start 变成了 end
-        self.start = prev; // prev 现在是新的 start
+        // 交换链表的 start 和 end 指针
+        std::mem::swap(&mut self.start, &mut self.end);
     }
 }
 
@@ -102,10 +104,18 @@ where
     T: Display,
 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        match self.start {
-            Some(node) => write!(f, "{}", unsafe { node.as_ref() }),
-            None => Ok(()),
+        let mut current = self.start;
+        let mut first = true;
+        while let Some(node_ptr) = current {
+            if !first {
+                write!(f, ", ")?;
+            }
+            let node = unsafe { node_ptr.as_ref() };
+            write!(f, "{}", node.val)?;
+            current = node.next;
+            first = false;
         }
+        Ok(())
     }
 }
 
@@ -114,10 +124,7 @@ where
     T: Display,
 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        match self.next {
-            Some(node) => write!(f, "{}, {}", self.val, unsafe { node.as_ref() }),
-            None => write!(f, "{}", self.val),
-        }
+        write!(f, "{}", self.val)
     }
 }
 

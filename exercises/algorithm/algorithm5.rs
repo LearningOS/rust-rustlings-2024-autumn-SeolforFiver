@@ -3,38 +3,49 @@
 	This problem requires you to implement a basic BFS algorithm
 */
 
-//I AM NOT DONE
 use std::collections::VecDeque;
 
-// Define a graph
+// 定义图结构
 struct Graph {
     adj: Vec<Vec<usize>>, 
 }
 
 impl Graph {
-    // Create a new graph with n vertices
+    // 创建一个包含 n 个顶点的新图
     fn new(n: usize) -> Self {
         Graph {
             adj: vec![vec![]; n],
         }
     }
 
-    // Add an edge to the graph
+    // 向图中添加一条边
     fn add_edge(&mut self, src: usize, dest: usize) {
         self.adj[src].push(dest); 
         self.adj[dest].push(src); 
     }
 
-    // Perform a breadth-first search on the graph, return the order of visited nodes
+    // 执行广度优先搜索，返回访问节点的顺序
     fn bfs_with_return(&self, start: usize) -> Vec<usize> {
-        
-		//TODO
+        let mut visit_order = vec![]; // 存储访问顺序
+        let mut visited = vec![false; self.adj.len()]; // 记录节点是否被访问
+        let mut queue = VecDeque::new(); // 用于实现 BFS 的队列
 
-        let mut visit_order = vec![];
-        visit_order
+        queue.push_back(start); // 将起始节点入队
+        visited[start] = true; // 标记起始节点为已访问
+
+        while let Some(node) = queue.pop_front() { // 当队列不为空时
+            visit_order.push(node); // 访问节点
+            for &neighbor in &self.adj[node] { // 遍历邻接节点
+                if !visited[neighbor] { // 如果邻接节点未被访问
+                    visited[neighbor] = true; // 标记为已访问
+                    queue.push_back(neighbor); // 入队
+                }
+            }
+        }
+
+        visit_order // 返回访问顺序
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -84,4 +95,3 @@ mod tests {
         assert_eq!(visited_order, vec![0]);
     }
 }
-
