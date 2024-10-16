@@ -2,7 +2,34 @@
 	queue
 	This question requires you to use queues to implement the functionality of the stac
 */
-// I AM NOT DONE
+
+
+use std::collections::VecDeque;
+
+#[derive(Debug)]
+pub struct Queue<T> {
+    data: VecDeque<T>,
+}
+
+impl<T> Queue<T> {
+    pub fn new() -> Self {
+        Self {
+            data: VecDeque::new(),
+        }
+    }
+
+    pub fn enqueue(&mut self, elem: T) {
+        self.data.push_back(elem);
+    }
+
+    pub fn dequeue(&mut self) -> Option<T> {
+        self.data.pop_front()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.data.is_empty()
+    }
+}
 
 #[derive(Debug)]
 pub struct MyStack<T> {
@@ -29,8 +56,8 @@ impl<T> MyStack<T> {
 
     pub fn pop(&mut self) -> Result<T, &str> {
         match self.q1.dequeue() {
-            Ok(value) => Ok(value),
-            Err(_) => Err("Stack is empty"), // 修改这里的错误信息
+            Some(value) => Ok(value),
+            None => Err("Stack is empty"),
         }
     }
 
